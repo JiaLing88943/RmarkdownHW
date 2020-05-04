@@ -1,0 +1,1508 @@
+---
+title: "R Programming Language"
+author: "Jia-Ling Zheng"
+output: html_document
+---
+108-1 NCKU Stat上課筆記整理
+
+# R
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+* [Basic]
+  + [Assignment]
+  + [Calculation]
+  + [Sequence]
+  + [Naming]
+  + [Approximated values]
+* [Vector]
+  + [Numeric Vector]
+  + [Character vectors]
+  + [Logical Vector]
+* [Matrix]
+  + [Construct a matrix]
+  + [Extract elements from a matrix]
+* [ControlFlow]
+  + [for() loop]
+  + [if() statement]
+  + [while() loop]
+  + [break, repeat, and next]
+  + [Some Examples]
+* [Functions]
+  + [source( )]
+  + [function( ) with one single input]
+  + [function( ) with multiple input variables]
+  + [function( ) and return multiple output]
+* [DataFrame]
+  + [Data Frame]
+  + [Data input and output at hard disk]
+  + [R Package]
+  + [Tools for help]
+* [Graphics]
+  + [Statistical Figures]
+  + [High-levlel plotting functions]
+  + [Low-levlel plotting functions]
+* [RMarkdown]
+* [Apply family]
+  + [Function: apply(. . . )]
+  + [Function: lapply(. . . )]
+  + [Function: sapply(. . . )]
+* [Aboutdata]
+  + [Remove NA]
+  + [Data Processing]
+  + [Package: reshape2]
+  + [Regression]
+  + [Package: dplyr]
+  
+## Basic
+### Assignment
+
+We recommended using “<-” because it makes clear
+that we are requesting an assignment, while "="
+is stating a relation.
+
+### Calculation
+
+There are still many arithmetic operators we don't mention. 
+
+[Search for “Arithmetic Operators” in R.](https://www.datamentor.io/r-programming/operator/)
+```{r}
+5 + 3 ### Addition
+5 * 3 ### Multiplication
+5 / 3 ### Division
+5 ^ 3 ### Exponent
+5 %% 3 ### Modulus(Remainder from division)
+5 %/% 3 ### Integer Division
+NA  ### Missing value
+NaN ### 0/0 (Not a Number)
+Inf ### 2/0 (Infinity)
+exp(2) ; log(10)### Exponential;logarithm
+```
+### Sequence
+more explanation : type "?seq"
+```{r}
+1:10
+seq(1, 10, 2)
+seq(1, 10, length.out = 6)
+```
+### Naming
+  1. Avoid function name or the specific words
+     + break; while; Inf; NaN 
+  2. Recommended Naming a meaningful object by "." or "_"
+     + height_Amy, weight_old
+   
+### Approximated values
+```{r}
+round(125.78253, digits = 3); round(125.78253, digits = -2);
+signif(83524587, digits = 3); signif(83524587, digits = 5);
+floor(125.78253) ###無條件捨去
+ceiling(125.78253) ###四捨五入
+trunc(125.78253) ### extract the integer part
+```
+## Vector
+### Numeric Vector
+* Three ways to create a vector 
+```{r}
+vt1 <- c(1:5)  
+vt1
+seq(1, 5, by = 0.5) ; seq(1,15, length.out=9)
+rep(c(3,9),each=2) ; rep(seq(2, 10, 2), 2)
+
+```
+* Creat a null or initial vector
+
+  + c( ): with unknown the length.
+  
+  + rep(NA, n): With known length.
+```{r}
+a <- c(3, 5, 9, 10)
+b <- c(14, 15, 17)
+V3 <- rep(NA, 7) 
+V3[1:4] <- a
+V3
+V3[5:7] <- b
+V3
+```
+* Elements in the vector
+  + unique( ) : return the elements that appear at least one time.
+  + table( )  : count the number of each element from the vector.
+```{r}
+b <- c(3, 3, 3, 3, 5, 5, 1, 2, 10, 10, 8)
+unique(b)
+table(b)
+```
+* Set Operations
+```{r}
+B <- c(3, 1, 5, 4, 7); C <- c(23, 1, 44, 5, 3)
+union(B, C)
+intersect(B, C)
+setdiff(B, C)
+setequal(B, C)
+```
+* Sorting and ordering of a vector
+  + sort(x, decreasing = FALSE, . . . )
+```{r}
+a <- c(3, 4, 2, 7, 10, 23, 8, 9, 11)
+sort(a)
+sort(a, decreasing = TRUE)
+```
+* Get the position (index) of sorting of a vector
+  + order(. . . , na.last = TRUE, decreasing = FALSE)
+```{r}
+a <- c(3, 4, 2, 7, 10, 23, 8, 9, 11)
+inc.order <- order(a)
+dec.order <- order(a, decreasing = TRUE)
+inc.order
+a[inc.order]
+dec.order
+a[dec.order]
+```
+* Change values in a vector
+```{r}
+a <- c(3, 4, 2, 7, 10, 23, 8, 9, 11)
+a[5] <- -3
+a[8] <- -1
+a
+```
+* Deleting elements from a vector
+```{r}
+vt1
+vt1[-2]
+vt1[-c(2:3)]
+```
+### Character vectors
+* Print Characters
+```{r}
+print("Hello R World!!!")
+```
+* Split a string
+* Lowercase and uppercase
+  + toupper(): change to uppercase
+  + tolower(): change to lowercase
+```{r}
+TEXT1 <- "Let's go to a game."
+strsplit(TEXT1, " ")
+toupper(TEXT1)
+tolower(TEXT1)
+```
+* Character vectors
+
+- the vector is made up of strings of characters.
+
+  "All elements of a vector must be of the same type."
+```{r}
+colors <- c("red", "yellow", "BLUE")
+more.colors <- c(colors, "green", "cyan")
+more.colors
+z <- c("red", "green", 12) ###attempt to mix data types in a vector
+z
+```
+* Basic operations for character vectors
+
+  substr( ) or grep() or paste()
+  
+  1. To take substrings, use “substr( )”.
+```{r}  
+colors <- c("red", "yellow", "blue")
+substr(colors, 1, 3)
+```
+  2. To search a string from a vector, use “grep()”, which is “Global Regular
+Expression Print”.
+
+It returns the locations of the desired patterns.
+```{r}
+colors <- c("red", "yellow", "BLUE")
+more.colors <- c(colors, "green", "cyan")
+grep("y", more.colors)
+#How to show the whole character from grep()?
+y.in.V <- grep("y", more.colors)
+more.colors[y.in.V]
+```
+  3. To building up strings, use “paste()”.
+```{r}
+colors <- c("red", "yellow", "blue")
+paste(colors, "line") ## with space
+paste(colors, "line", sep = "" ) ## no space
+paste("I like", colors, collapse = "; ")
+```
+* Factors
+
+factor(): factor(x = character())
+```{r}
+colors <- c("red", "yellow", "blue")
+f.c <- factor(colors)
+f.c
+levels(f.c)
+as.integer(f.c)
+```
+### Logical Vector
+* Logical number
+
+  -Binary operators which allow the comparison of values in atomic vectors (relational operators).
+```{r}
+c(3 < 5, 3 > 5)
+c(3 <= 5, 3 >= 5)
+3 == 5 ###equal
+3 != 5 ###not equal
+```
+* Boolean operations
+```{r}
+A <- c(T, T, F, T, F); B <- c(3, 1, 5, 4, 7)
+A
+B[A]
+!A
+B[!A]
+A <- c(T, T, F, T, F)
+```
+
+* Logical vector
+
+  -Compare the same location of elements individually.
+```{r}
+B <- c(3, 1, 5, 4, 7); C <- c(23, 1, 44, 5, 3)
+B == C
+D <- c(2, 5 ,6, 10)
+B == D
+```
+* “is.” series
+  -“is.XYZ()” is any comparison to the type “XYZ” of an object.
+
+     is.null() ; is.na() ; is.nan() ; is.infinite()
+
+     is.character() ; is.integer() ; is.numeric() ;
+    
+```{r}
+is.null(c())
+c(is.na(NA), is.na(2))
+x1 <- 1:5
+x2 <- c(1:3, 2.2)
+x3 <- colors
+c(is.integer(x1), is.numeric(x1), is.double(x1))
+c(is.integer(x2), is.numeric(x2), is.double(x2))
+c(is.character(x3), is.numeric(x3))
+```
+## Matrix
+### Construct a matrix
+  1. Construct a matrix by row
+  2. Construct a matrix by column
+```{r}
+a <- 1:5; b <- 6:10;
+c <- 11:15; d <- 16:20
+M1 <- rbind(a, b, c, d)
+M1
+M2 <- cbind(a, b, c, d)
+M2
+```
+  3. Construct a matrix by a long vector
+```{r}
+#預設是由上而下由右至左排序
+matrix(1:20, nrow = 4, ncol = 5)
+matrix(1:20, nrow = 4, ncol = 5, byrow = TRUE)
+```
+* Names in a matrix
+```{r}
+M1 <- matrix(1:20, nrow = 4, ncol = 5, byrow = TRUE)
+dim(M1)
+colnames(M1) <- c("V1", "V2", "V3", "V4", "V5")
+dimnames(M1)
+```
+### Extract elements from a matrix
+  - We still use “[ ]” to extract elements from a matrix, but
+  
+     using a “,” to identify the locations of row and column seperately.
+```{r}
+M1 <- matrix(1:20, nrow = 4, ncol = 5, byrow = TRUE)
+M1[c(2, 4), c(3, 5)];
+#Extract a row or a column from a matrix
+M1[, 4]; M1[3, ]
+colnames(M1) <- c("V1", "V2", "V3", "V4", "V5")
+rownames(M1) <- c("a", "b", "c", "d")
+rownames(M1)
+dim(M1)
+#Extract elements by names
+############M1[c("a","d"),c("v2", "v3") ]
+```
+### Simple evaluation on matrix
+```{r}
+A <- matrix(c(1:4), 2, 2)
+B <- matrix(c(5:8), 2, 2)
+A + 3
+A - 1
+A * 5
+A / 4
+A * B
+```
+* Matrix multiplication
+
+  - Use %*% to evaluate multiplication of matrices.
+```{r}
+A <- matrix(c(1:4), 2, 2)
+B <- matrix(c(5:8), 2, 2)
+A %*% B
+```
+* About Matrix 
+```{r}
+B <- matrix(c(5:8), 2, 2)
+t(B) ### Transpose
+diag(B) ### Diagonal matrix
+det(B) ### Determinant of a matrix
+solve(B) ### Inverse matrix
+eigen(B) ### Eigen system
+```
+* Summary each column or each row
+```{r}
+C <- matrix(1:9, 3, 3)
+colSums(C)
+rowSums(C)
+colMeans(C)
+rowMeans(C)
+```
+
+## ControlFlow
+### for() loop
+  - specify that a certain operation be repeated a fixed number of times.
+  
+**Syntax**
+
+              for (index in vector) commands,
+  
+where
+
++ index: the index is changed each time
+ 
++ vector: it includes all possible cases
+
++ commands: actions
+
+### if() statement
+- One condition:
+  if (condition) {
+  
+    commands when TRUE
+    
+    } else {
+    
+    commands when FALSE
+    
+    }
+- Multiple conditions:
+  if (condition1) {
+  
+    commands when condition1 is TRUE
+    
+    } else if (condistion2) {
+    
+    commands when condition2 is TRUE
+    
+    } else {
+    
+    commands when condition1 and condition2 are FALSE
+    
+    }
+
+### while() loop
+  - The pattern of repetition isn’t known in advance and we need to do some calculations and keep going as long as a condition holds. 
+
+**Syntax**
+
+              while (condition) statements
+If the condition evaluates to FALSE, nothing more is done. If it evaluates to
+TRUE the statements are executed, condition is evaluated again, and the
+process is repeated.
+
++ Relationship between for() and while()
+  - for()
+```{r}
+for(j in 1:8){
+  print(j)
+}
+```
+  - while(): Need the initial, condition of stopping, and iteration or replacement
+```{r}
+j <- 1
+while(j <= 8){
+  print(j)
+  j <- j + 1
+}
+```
+
+### break, repeat, and next
++ break
+
+  if (condition) break
+
+  The break statement causes the loop to terminate immediately. break statements
+  can also be used in for() and while() loops.
+
++ repeat
+
+  Use “repeat” to repeat until we execute a break statement.
+
+  repeat { statements }
+  
+  This causes the statements to be repeated endlessly.
+
++ next
+
+  The next statement causes control to return immediately to the top of the loop; it can also be used in any loop.
+  
+### Some Examples
+
++ Flip a coin
+
+  Let 0 be a tail and 1 be a head. Count the total number of flipping until each success occurs.
+```{r}
+coin <- c(0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0,
+          1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0,
+          0, 0, 0, 0, 0, 0, 1)
+N <- c(); j <- 1
+while(j <= length(coin)){
+  n.fail <- 0
+  while(coin[j] != 1){
+    n.fail <- n.fail + 1
+    j <- j + 1
+    }
+  N <- c(N, n.fail + 1)
+  j <- j + 1
+}
+N
+```
++ Fibonacci numbers
+
+  List all Fibonacci numbers less than 100. Use for() and if(condition) break.
+```{r}
+Fib1 <- 1
+Fib2 <- 1
+Fibonacci <- c(Fib1)
+for(j in 1:1000){
+  if(Fib2 < 100){
+    Fibonacci <- c(Fibonacci, Fib2)
+    Fib1 <- Fibonacci[length(Fibonacci) - 1]
+    Fib2 <- Fib1 + Fibonacci[length(Fibonacci)]
+  }else{
+    break
+  }
+}
+Fibonacci
+```
+
+## Functions
+### source( )
+1. Creat a new script for your function or codes.
+2. **Save** the script named as “XXX.R” and use **source( )** to run the code.
+3. Remember to use **print( )** or **cat( )** so that your final answer will be
+shown.
++ print( ) & cat( )
+  - **print( )** shows with " " between characters.
+  - **cat()** shows without " " between characters. You can add ”\n" to make characters in a new line.
+```{r}
+x <- c(0.8933, 0.2344, 0.0764, 0.7736)
+x.percent <- round(100*x, digits = 1)
+x.show <- paste(x.percent, "%", sep = "")
+print(x.show)
+cat(x.show)
+```
+```{r}
+x <- c("A", "B", "C", "D")
+print(x)
+cat(x)
+cat(x[1], "\n",
+x[2], "\n", sep = "" )
+```
+
+### function( ) with one single input
+
+Use **function( )** when you only have one main code for evaluation and
+multiple possible input, like $$f (x) = 3x + 2, x = 2, 3, 4.$$
+f means a name of a function of input x when x = 2, 3, 4.
+```{r}
+f <- function(x){
+  3*x + 2
+}
+f(2); f(3); f(4)
+```
++ return( ) in the function( )
+
+You must tell what will be return when you use the function by **return( )** or **invisible( )**.
+
+If you don’t put **return( )** at the end of the function, it will treat the last line as the result automatically.
+```{R}
+f <- function(x){
+return(3*x + 2)
+}
+f(2)
+```
+```{R}
+f <- function(x){
+res <- 3*x + 2
+}
+f(2) ## return nothing
+a <- f(2); a
+```
+
+```{R}
+make.percent <- function(x){
+x.percent <- round(100*x, digits = 1)
+x.show <- paste(x.percent, "%", sep = "")
+return(x.show) 
+}
+make.percent(c(0.8933, 0.2344, 0.0764, 0.7736))
+ans <- make.percent(c(0.8933, 0.2344, 0.0764, 0.7736))
+ans
+```
+```{r}
+make.percent <- function(x){
+x.percent <- round(100*x, digits = 1)
+x.show <- paste(x.percent, "%", sep = "")
+invisible(x.show) ## compare to return(x.show)
+}
+make.percent(c(0.8933, 0.2344, 0.0764, 0.7736))
+ans <- make.percent(c(0.8933, 0.2344, 0.0764, 0.7736))
+ans
+```
+
+### function( ) with multiple input variables
+$$f (x, y) = x^2 + y^2, x, y = 2, 3, 4.$$
+f means a name of a function of input x and y when x, y = 2, 3, 4.
+```{r}
+f <- function(x, y){
+x^2 + y^2
+}
+f(2, 2); f(2, 3); f(2, 4)
+```
++ Example: percent
+```{r}
+make.percent <- function(x, x.digits){
+x.percent <- round(100*x, digits = x.digits)
+x.show <- paste(x.percent, "%", sep = "")
+return(x.show)
+}
+make.percent(c(0.8933, 0.2344, 0.0764, 0.7736), 0)
+make.percent(c(0.8933, 0.2344, 0.0764, 0.7736), 2)
+```
++ Set a default in the function
+
+Add the settings of default in the arguments of input variables.
+
+Example: percent
+```{r}
+make.percent <- function(x, x.digits = 0){
+x.percent <- round(100*x, digits = x.digits)
+x.show <- paste(x.percent, "%", sep = "")
+return(x.show)
+}
+make.percent(c(0.8933, 0.2344, 0.0764, 0.7736))
+make.percent(c(0.8933, 0.2344, 0.0764, 0.7736), 0)
+```
+
+### function( ) and return multiple output
++ Introuction to list( )
+**list( )** is a collection of multiple types of objects, like vectors, characters, numbers, lists,. . . .
+
+Example:
+```{r}
+X <- list(a = 3, b = c(1,2,3,4,5), c = c("A", "B"))
+X
+```
++ Extract an element from a list
+
+Use **$** or **[[ ]]**.
+
+  - **$**: the name of the element.
+  - **[[ ]]**: the location or the name of the element.
+```{r}
+X <- list(a = 3, b = c(1,2,3,4,5), c = c("A", "B"))
+X$a
+X[[2]]
+X[["c"]]
+```
++ Creat a list
+```{r}
+try.list <- list() ## a null list
+length(try.list)
+```
+```{r}
+length(try.list) <- 2 ## assign the size to the list
+try.list[[1]] <- seq(0, 10, length.out = 3) ## without name
+try.list$square <- seq(0, 10, length.out = 3)^2 ## with name
+try.list
+```
++ Exact element from the list
+```{r}
+try.list[[3]]
+try.list$square
+names(try.list)
+length(try.list)
+```
+
++ Use function( ) and list( )
+
+Example: perfect number
+```{r}
+perfect.number <- function(a, b){
+  k <- a
+  res <- c()
+  ans <- list()
+  while(k < b){
+    fac <- c()
+    for(j in 1:k){
+      if((k %% j) == 0) fac <- c(fac, j)
+    }
+    if(k == sum(fac[-length(fac)])) {
+      res <- c(res, k)
+      ans[[paste(k)]] <- fac[-length(fac)]
+    }
+      k <- k+1
+  }
+  ans$number <- res
+  return(ans)
+}
+Ans <- perfect.number(1, 100)
+Ans
+```
+
+## DataFrame
+### Data Frame
+  1. Most data sets are stored in R as data frames.
+  2. These are like matrices, but with the columns having their own names.
+  3. Columns can be of different types from each other.
+```{r}
+colors <- c("red", "yellow", "blue")
+numbers <- c(1, 2, 3)
+colors.and.numbers <- data.frame(colors, numbers,
+more.numbers = c(4, 5, 6))
+colors.and.numbers
+```
++ Difference from matrix
+  1. These are like matrices, but with the columns having their own names.
+  2. Columns can be of different types from each other.
+```{r}
+X <- matrix(NA, 3, 3)
+X[,1] <- c("red", "yellow", "blue")
+X[,2] <- c(1, 2, 3)
+X[,3] <- c(4, 5, 6)
+colnames(X) <- c("colors", "numbers", "more.numbers")
+X
+```
++ Types in a data frame: character
+
+Change the type from factor to character by using stringAsFactors = FALSE.
+```{r}
+colors <- c("red", "yellow", "blue")
+numbers <- c(1, 2, 3)
+colors.and.numbers <- data.frame(colors, numbers,
+more.numbers = c(4, 5, 6),
+stringsAsFactors = FALSE)
+str(colors.and.numbers)
+```
++ More on data.frame(): add rows
+  Add column and row vectors into a data frame.
+  - row: use rbind()
+  - column: use the sign $ or cbind()
+  
+  Use **stringsAsFactors = FALSE**
+```{r}
+data2 <- data.frame(colors, numbers, more.numbers = c(4, 5, 6),
+stringsAsFactors = FALSE)
+data2 <- rbind(data2, c("black", 3, 5))
+data2
+```
++ More on data.frame(): add columns
+  Add column and row vectors into a data frame.
+  - column: use the sign $ or cbind()
+  - row: use rbind()
+```{r}
+colors <- c("red", "yellow", "blue")
+number1 <- c(1, 2, 3)
+number2 <- c(10, 11, 12)
+colors.and.numbers <- data.frame(colors, number1) ## construct colors.and.numbers$more.numbers <- c(4, 5, 6) ## add one column
+colors.and.numbers <- cbind(colors.and.numbers, number2) ## add colors.and.numbers
+```
+
+### Data input and output at hard disk
+1. Change and find directory
+  - Change the directory: setwd(“dir”)
+  - Find the directory: get()
+```{r eval=FALSE}
+setwd("C:/Users/stat/Desktop")
+getwd()
+```
+2. Save and load the objects 
+
+Suppose you have constructed some R objects, type **dump(objects, file = “XXX.R”)**.
+```{r}
+X <- seq(0, 10, 0.1)
+A <- 3
+B <- mean(X)
+dump(list = objects(), file = "all.R")
+dump(c("A", "X"), file = "parts.R")
+```
+To retrieve the objects in a future session, type **source(“XXX.R”)**
+```{r}
+source("all.R")
+source("parts.R")
+```
++ To save all objects in the current workspace, type **save.image(“XXX.RData”)**.
++ To save parts of objects, type **save(a, b, c, file = “XXX.RData”)**.
++ Use **load(“XXX.RData”)** to retrieve data.
+```{r eval=FALSE}
+X <- seq(0, 10, 0.1)
+A <- 3
+B <- mean(X)
+save.image("all.RData")
+save(A, B, "parts.RData")
+load("parts.RData")
+load("all.RData")
+```
+
+3. Save data to a file
+
+You can save a matrix, a vector, or a data frame into two types of file, .txt (.dat) and .csv.
+
++ Use **write.table(A, file = “XXX.txt”)**
++ Use **write.csv(A, file = “XXX.csv”)**
+```{r}
+colors <- c("red", "yellow", "blue")
+numbers <- c(1, 2, 3)
+X <- data.frame(colors, numbers, more.numbers = c(4, 5, 6))
+write.table(X, "matrix.txt")
+write.csv(X, "matrix.csv")
+```
+
+4. Read data from a file 
+
+You can laod a matrix, a vector, or a data frame from two types of file, .txt
+(.dat) and .csv.
+
++ Use **read.table(file = “XXX.txt”)**
++ Use **read.csv(file = “XXX.csv”)**
+```{r eval=FALSE}
+X1 <- read.table("matrix.txt")
+X2 <- read.csv("matrix.csv")
+```
+With names of columns in a .txt file, you should add **header = TRUE**.
+```{r eval=FALSE}
+read.table("test.txt", header = TRUE)
+```
+
+### R Package
+1. Introduction to R packages
++ Other than some basic functions, some developed methodologies and
+tools are provided in a way of packages. You can download them from
+CRAN or Github.
++ To download a package, type install.packages(“XXX”).
++ Before using some functions in a downloaded package, you should call
+the package by typing library(XXX).
+
+```{r eval=FALSE}
+install.packages("data.table")
+```
+2. Use the functions in the installed packages
++ Before using some functions in a downloaded package, you should call
+the package by typing library(XXX).
+Try the function fread( ), which is similar to read.table( ) but faster and
+more convenient.
+```{r eval=FALSE}
+library(data.table)
+mydat <- fread('test.csv')
+head(mydat)
+```
+3. Read data though internet
+```{r eval=FALSE}
+input <- fread("http://www.stats.ox.ac.uk/pub/datasets/csb/ch11b.dat")
+head(input)
+```
+4. More on packages
+
+[CRAN - Contributed Packages](https://cran.r-project.org/web/packages/)
+
+[R bloggers](https://www.r-bloggers.com/october-2019-top-40-new-r-packages/)
+
+### Tools for help
+1. Online help
+```{r eval=FALSE}
+help(mean)
+?median
+```
+2. Built-in examples
+```{r}
+example(mean)
+```
+3. Only knowing a keyword of function
+```{r eval=FALSE}
+help.search("optimization")
+```
+
+## Graphics
+### Statistical Figures
+
+1. Descriptive Statistics 
+
+  Given an arbitray vector x:
+  
+  + Histogram: hist(x)
+  + Boxplot: boxplot(x)
+  + Density plot: plot(density(x))
+
+```{r}
+x.norm <- rnorm(100, mean=0, sd=1)
+hist(x.norm)
+boxplot(x.norm)
+plot(density(x.norm))
+```
+    
+  For discrete variables x:
+  
+  - Barchart: barplot(x)
+  - Piechart: pie(x)
+
+```{r}
+x <- sample(c(1:8), 100, replace=TRUE, prob=c(8:1))
+x <- table(x)
+names(x) <- c("A", "B", "C", "D", "E", "F", "G", "H")
+barplot(x)
+pie(x)
+```
+
+  For multiple categories:
+  
+  + Scatter plot
+  + Boxplot
+```{r}
+x <- rnorm(100)
+y <- 3*x + rnorm(100, 0, 1)
+plot(x, y)
+cor(x, y)
+X <- matrix(rnorm(30), 10, 3) ## use matrix
+pairs(X, pch = 19)
+## use matrix
+X <- matrix(rnorm(50), 10, 5) 
+boxplot(X)
+## use data.frame
+X <- data.frame(group = rep(c("A", "B", "C", "D", "E"), each = 10),
+res = rnorm(50))
+boxplot(res ~ group, data = X)
+```
+  
+### High-levlel plotting functions
+  + plot(. . . )
+
+        plot(x, y,
+      
+            type = "p", ### types of the plot
+      
+            pch = , ### the symbol in the plot
+       
+            main = NULL, ### the title of the plot
+      
+            lty = , ### the style of a line
+       
+            lwd = , ### the width of a line
+      
+            cex = , ### the size of an text
+      
+            bty="o", ### the box around the plot
+      
+            col = , ### the color of an object
+      
+            xlim = NULL, ylim = NULL, # the range of an axis
+      
+            sub = NULL, ### the sub-title of the plot
+      
+            xlab = NULL, ylab = NULL, # the name of an axis
+      
+            cex.main = ### the size of the title
+        )
+  1. plot(. . . , type = . . . )
+      
+```{r}
+par(mfrow = c(2,3)) # split plot ranges
+plot(x, y, type = "p", main = "p") #points
+plot(x, y, type = "l", main = "l") #lines
+plot(x, y, type = "b", main = "b") #both points and lines
+plot(x, y, type = "o", main = "o") #lines pass through points
+plot(x, y, type = "h", main = "h") #the lines between points and x-axis
+plot(x, y, type = "n", main = "n") #no content in the plot but plot region
+```
+ 
+  2. plot(. . . , pch = . . . )
+  
+      Choose a symbols for points.
+      
+      pch = c(1, 2, ..., 25, "*", ".", "o", "O","0", "+", "-", "|", "%", "#")
+      
+  3. plot(. . . , cex = . . . )
+  
+      Sizes in a plot: the number of times size of the default one
+      - Size of points: cex = 1.5
+      - Size of the title: cex.main = 2
+      - Size of the labels of ticks of an axis: cex.axis = 2
+      - Size of the labels of the name of an axis: cex.lab = 2   
+```{r}
+par(mfrow = c(2,3)) # split plot ranges
+plot(x, y, pch = 1, main = "pch = 1")
+plot(x, y, pch = 3, main = "pch = 3", cex.main = 2)
+plot(x, y, pch = 10, main = "pch = 10", cex.axis = 2)
+plot(x, y, pch = 15, main = "pch = 15", cex = 2, cex.main = 2)
+plot(x, y, pch = 19, main = "pch = 19", cex = 2, cex.axis = 2)
+plot(x, y, pch = "#", main = "pch = #", cex = 2,
+cex.axis = 2, cex.lab = 2, cex.main = 2)
+```
+
+  4. plot(. . . , type = “l”, lty =. . . , lwd = . . . )
+    - The style of lines: lty = 1, 2, . . . , 7
+    - The width of lines: lwd = 1, 1.25,. . .
+```{r}
+t <- 1:20
+y <- rnorm(20)
+par(mfrow = c(2,2)) # split plot ranges
+plot(t, y, type = "l")
+plot(t, y, type = "l", lty = 2, lwd = 2)
+plot(t, y, type = "l", lty = 3, lwd = 2)
+plot(t, y, type = "l", lty = 5, lwd = 2)
+```
+
+  5. plot(. . . , bty = . . . )
+  
+    The box around the plot:
+  
+    bty = c("o", "n", "7", "L", "C", "U")
+```{r}
+t <- 1:20
+y <- rnorm(20)
+par(mfrow = c(2,3)) # split plot ranges
+plot(t, y, type = "l", bty = "o", main = "bty = \" o \"") #o: complete box (default parameter)
+plot(t, y, type = "l", bty = "n", main = "bty = \" n \"") #n: no box
+plot(t, y, type = "l", bty = "7", main = "bty = \" 7 \"") #7: top & right
+plot(t, y, type = "l", bty = "L", main = "bty = \" L \"") #L: bottom & left
+plot(t, y, type = "l", bty = "C", main = "bty = \" C \"") #C: top & left & bottom
+plot(t, y, type = "l", bty = "U", main = "bty = \" U \"") #U: left & bottom & right
+```
+
+  6. plot(. . . , col = . . . )
+    - Use number: col = c(1, 2, 3, 4, 5, 6, 7, 8)
+    - Use name: col = c(“red”, “green”, “blue”, “grey”)
+    - Use hexadecimal code: col = c(“#009999”, “#0000FF”, . . . )
+    - More on colors: help(palette)
+```{r}
+t <- 1:20
+y <- rnorm(20)
+par(mfrow = c(2,3)) # split plot ranges
+plot(t, y, type = "l", col = 1)
+plot(t, y, type = "l", col = 2)
+plot(t, y, type = "l", col = "green")
+plot(t, y, type = "l", col = "grey")
+plot(t, y, type = "l", col = "#009999")
+plot(t, y, type = "l", col = "#0000FF")
+```
+  
+  7. plot(. . . , main = . . . , sub = . . . , xlab = . . . , ylab = . . . )
+    - main: main title (at the top)
+    - sub: sub title (at the bottom)
+    - xlab: name of x-axis
+    - ylab: name of y-axis
+```{r}  
+t <- 1:20
+y <- rnorm(20)
+par(mfrow = c(2,2)) # split plot ranges
+plot(t, y, type = "l")
+plot(t, y, type = "l", main = "Time series")
+plot(t, y, type = "l", main = "Time series", sub = "this year")
+plot(t, y, type = "l", main = "Time series", xlab = "time", ylab = "return")
+```
+  
+  8. plot(. . . , xlim = . . . , ylim = . . . )
+    
+    Ranges of variables
+```{r}
+t <- 1:20
+y <- rnorm(20)
+par(mfrow = c(2,2)) # split plot ranges
+plot(t, y, type = "b")
+plot(t, y, type = "b", xlim = c(0, 50))
+plot(t, y, type = "b", ylim = c(-5, 5))
+plot(t, y, type = "b", xlim = c(0, 50), ylim = c(-5, 5))
+```
+  
+  + curve(. . . )
+  
+  Instead using plot(x, y, type = “l”), use curve(expression, from = ..., to = ...)
+  to draw a function of a variable.
+```{r}  
+par(mfrow = c(2, 3))
+curve(exp(-x), 0, 10)
+curve(dnorm(x), -10, 10)
+curve(x^2, -10, 10)
+curve(sin, 0, 10)
+curve(3*exp(-3*x), 0, 6)
+curve(5*x+2, 0, 10)
+```
+
+### Low-levlel plotting functions
+  + Add points or lines to an existing plot
+    - points(. . . ): add points
+    - lines(. . . ): add lines
+    - abline(. . . ): add straight lines
+    
+    abline(a = ..., b = ..., h = ..., v = ..., reg = ..., coef = ...)
+    $$y = a + bx$$
+
+```{r}
+plot(t, y, type = "b")
+abline(h = 0)
+abline(v = 15, lty = 2, col = 8, lwd = 2)
+points(t[15], y[15], pch = 19, col = 2)
+```
+
+  + Add text to an existing plot
+    - Arbitrary locations:
+  
+      text(x, y, labels = . . . )
+    - Notations of objects in the plot
+    
+      legend(x, y, legend, . . . )
+```{r}
+x <- rnorm(50)
+y <- 3*x + rnorm(50, 0, 1)
+y1 <- 5*x + rnorm(50, 0, 2)
+plot(x, y, type = "p", pch = 19)
+abline(a = 0, b = 3)
+points(x, y1, col = 4, pch = 20)
+abline(a = 0, b = 5, col = 4)
+text(-1.5, 2, "A", cex = 5)
+text(1, -5, "B", cex = 5, col = 2)
+legend("topleft", c("Y", "Y1"), col = c(1,4), lty = c(1, 1),
+cex = 1.2)
+```
+
+  + Re-arrange the region of a figure
+  
+     Use par(. . . ) to creat an arbitrary region
+    - mfrow = c(2, 2): Define a multi-figure display by row
+    - mfcol = c(2, 2): Define a multi-figure display by column
+    - mai, mar = c(3, 3, 1, 1): The four margin sizes, in inches (mai), or in text line units (mar).
+    
+```{r}
+x <- rnorm(50)
+y <- 3*x + rnorm(50, 0, 1)
+y1 <- 5*x + rnorm(50, 0, 2)
+par(mfrow = c(1, 1), mar = c(0.5, 0.5, 0.5, 0.5))
+plot(x, y, type = "p", pch = 19)
+abline(a = 0, b = 3)
+points(x, y1, col = 4, pch = 20)
+abline(a = 0, b = 5, col = 4)
+text(-1.5, 2, "A", cex = 5)
+text(1, -5, "B", cex = 5, col = 2)
+legend("topleft", c("Y", "Y1"), col = c(1,4), lty = c(1, 1),
+cex = 2)
+```
+  
+```{r}
+x <- rnorm(50)
+y <- 3*x + rnorm(50, 0, 1)
+y1 <- 5*x + rnorm(50, 0, 2)
+y2 <- -2*x + rnorm(50, 0, 2)
+layout(matrix(c(1,2,3,3), 2, 2, byrow=TRUE))
+plot(x, y, type = "p", pch = 19, main = "Y")
+abline(a = 0, b = 3)
+plot(x, y1, type = "p", pch = 19, main = "Y1")
+abline(a = 0, b = 5)
+plot(x, y2, type = "p", pch = 19, main = "Y2")
+abline(a = 0, b = -2)
+```
+
+  + Split the whole plot by some locations of plot
+    - layout(matrix(c(1,2,3,3), 2, 2, byrow=TRUE))
+
+## RMarkdown
+  + Compile a single R Markdown document to a report in different
+    formats, such as PDF, HTML, or Word.
+  + Create notebooks in which you can directly run code chunks
+    interactively.
+  + Make slides for presentations (HTML5, LaTeX Beamer, or PowerPoint).
+
+  1. The first step:
+```{r eval=FALSE}
+install.packages("rmarkdown")
+```
+  2. Create a new file
+  
+File → New File → Rmarkdown → Choose Title/Author/Output format(HTML/PDF/WORD) → OK
+
+### Some basic editings
+    *italics* and _italics_
+    **bold** and __bold__
+    superscript^2^ and ~~strikethrough~~
+  *italics* and _italics_
+  
+  **bold** and __bold__
+  
+  superscript^2^ and ~~strikethrough~~
+  
+### Headers of a Paragraph
+
+  - Use “#” to show the paragraph.
+  
+  *#* Header 1
+    
+  *##* Header 2
+    
+  *###* Header 3
+    
+  *####* Header 4
+    
+  *#####* Header 5
+      
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+
+### Equations
+    $A = \pi*r^{2}$
+    $$B = 2 \pi r$$
+Inline equation:
+
+$A = \pi*r^{2}$
+
+Center an eqiation:
+
+$$B = 2 \pi r$$
+
+### Bullet point
+
+    * unordered list
+    * item 2
+        + sub-item 1
+    1. ordered list
+    2. item 2
+        + sub-item 1
+* unordered list
+* item 2
+    + sub-item 1
+1. ordered list
+2. item 2
+    + sub-item 1
+
+### Table 
+
+    Table Header  | Second Header
+    ------------- | -------------
+    Table Cell    | Cell 2
+    Cell 3        | Cell 4
+
+Table Header  | Second Header
+------------- | -------------
+Table Cell    | Cell 2
+Cell 3        | Cell 4
+
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{c|cc}
+            \hline
+            $x_j$ & 0 & 1 \\
+            \hline
+            $p_j$ & 0.3 & 0.7 \\
+            \hline
+        \end{tabular}
+        \caption{Random variable $X$ with its probability}
+    \end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|cc}
+        \hline
+        $x_j$ & 0 & 1 \\
+        \hline
+        $p_j$ & 0.3 & 0.7 \\
+        \hline
+    \end{tabular}
+    \caption{Random variable $X$ with its probability}
+\end{table}
+
+### Matrix
+
+    $\left[
+        \begin{array}{cc}
+          A & B \\
+          C & D \\
+        \end{array}
+      \right]$
+  
+$\left[
+    \begin{array}{cc}
+      A & B \\
+      C & D \\
+    \end{array}
+  \right]$
+
+  
+### Sources:
+
+  - [Introduction to R Markdown](https://rmarkdown.rstudio.com/lesson-1.html)
+  - [Beamer presentation](https://bookdown.org/yihui/rmarkdown/beamer-presentation.html)
+  - [Beamer-theme-matrix](https://hartwork.org/beamer-theme-matrix/)
+  - [Chunk options and package options](https://yihui.org/knitr/options/)
+  - [The R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+
+## Apply family
+### Function: apply(. . . )
+  **apply(X, MARGIN, FUN, . . . )** Returns a vector or array or list of values obtained by applying a function to margins of an array or a matrix.
+  
+   - X: array or matrix (or a data frame)
+   - MARGIN: for a matrix 1 indicates rows, 2 indicates columns
+   - FUN: name of a function
+```{r results='hide'}
+A <- matrix(rnorm(1500), 500, 3)
+#Sum of each row
+apply(A, 1, sum); rowSums(A)
+#Sum of each column
+apply(A, 2, sum); colSums(A)
+```
+
+Write a function for the sum of each row.   
+```{r}
+row.col.sum <- function(X, margin = 1){
+  size <- dim(X)
+  if(margin == 1){
+    res <- rep(NA, size[1])
+    for(j in 1:size[1]){
+      res <- c(res, sum(X[j,]))
+    }
+  }else if(margin == 2){
+    res <- c()
+    for(j in 1:size[2]){
+      res <- c(res, sum(X[,j]))
+    }
+  }else{
+    stop("margin should be either 1 or 2.")
+  }
+  return(res)
+}
+```
+
++ Check time-efficiency
+```{r}
+library(rbenchmark)
+benchmark(replications=rep(1000, 1),
+        apply(A, 1, sum), rowSums(A), row.col.sum(A, 1),
+        columns=c('test', 'elapsed', 'relative'))
+```
+
++ What if there are NA’s?
+```{R}
+B <- matrix(sample(1:100, 15), 5, 3)
+B[1, 2] <- NA
+B[3, 1] <- NA
+B <- data.frame(B)
+colnames(B) <- c("factor 1", "factor 2", "factor 3")
+apply(B, 2, mean)
+```
+
+Recall: mean(. . . , na.rm = TRUE)
+```{R}
+apply(B, 2, mean, na.rm = TRUE)
+```
+
++ Other function in apply(X, MARGIN, FUN)
+```{r}
+apply(B, 2, max)
+apply(B, 2, min, na.rm = TRUE)
+```
+
+### Function: lapply(. . . )
+  **lapply(X, FUN, . . . )** Returns a list of the same length as X, each element of which is the result of applying FUN to the corresponding element of X.
+
+  - X: vector or data frame or list
+  - FUN: name of a function
+```{r}
+C <- list(a = 1:10, beta = exp(-3:3))
+lapply(C, mean)
+par(mfrow = c(1, 2))
+lapply(C, hist)
+```
+  
+### Function: sapply(. . . )
+  **sapply(X, FUN, . . . , simplify = TRUE)** Similarlly to lapply(X, Fun, . . . ) if sapply(x, f, simplify = FALSE, USE.NAMES = FALSE)
+
+  - X: vector or data frame or list
+  - FUN: name of a function 
+  - simplify: logical; TRUE will return an array or a matrix with the same length of output
+```{r}
+sapply(C, summary)
+sapply(C, summary, simplify = FALSE)
+D <- list(a = sample(1:10, 10, replace = TRUE),
+b = sample(1:5, 20, replace = TRUE))
+sapply(D, unique)
+sapply(D, table)
+```
+
+## Aboutdata
+### Remove NA
++ If NA, . . .
+  - complete.cases(X): X could be a sequence of vectors, matrices and data frames.
+    - na.omit(X)
+```{r}
+dim(airquality)
+no.na <- complete.cases(airquality)
+head(airquality[no.na,])
+dat.no.na.1 <- airquality[no.na,]
+dim(dat.no.na.1)
+dat.no.na.2 <- na.omit(airquality)
+dim(dat.no.na.2)
+```
+### Data Processing
++ Multiples datasets
+  - Using **cbind(. . . )** and **rbind(. . . )** to combine datasets.
+  - Using **cut(. . . )** to group or to label items.
+  
+For example, would like to lable 5 groups by the variable “Wind”.
+```{r}
+grouped1 <- cut(airquality[,3], 5)
+head(grouped1)
+grouped2 <- cut(airquality[,3], 5,
+labels = c("G1", "G2", "G3", "G4", "G5"))
+head(grouped2)
+```
++ Summary the grouped data
+1. Summarize the number of each group.
+```{r}
+airquality$group <- grouped2
+table(grouped2)
+```
++ Odering the dataset
+2. After labeling the group, order the dataset by the group. **order(. . . )**
+```{r}
+order.data.1 <- airquality[order(airquality$group),]
+head(order.data.1)
+```
+If there is no column for further sorting, it returns the result sorted by the index of
+the row.
+
+3. Keep ordering the dataset by the temprature. **order(first, second, . . . )**
+```{r}
+order.data.2 <- airquality[order(airquality$group, airquality$Temp), ]
+head(order.data.2)
+```
+
+### Package: reshape2
++ Change the format from original one
+
+Package: “reshape2”
+
+For example, the dataset is as follows:
+```{r}
+game <- c("G1", "G2", "G3", "G4", "G5")
+site <- c("M", "O", "L", "O", "L")
+Lin <- c(15, 6, 26, 22, 18)
+Jordan <- c(18, 32, 21, 25, 12)
+Peter <- c(10, 6, 22, 9, 12)
+ballgames <- data.frame(game, site, Lin, Jordan, Peter)
+```
+```{r eval=FALSE}
+install.packages("reshape2")
+```
++ melt(. . . )
+
+Use **melt(data, id.vars)** to reshape the dataset.
+```{r}
+library(reshape2)
+after.reshape <- melt(ballgames, id.vars = c("game", "site"))
+```
++ dcast(. . . )
+
+Use **dcast(dataset, formula, fun)** to show the specific data format.
+```{r}
+dcast(after.reshape, game + site ~ variable, sum)
+dcast(after.reshape, variable ~ game, sum)
+dcast(after.reshape, variable ~ site, mean)
+dcast(after.reshape, variable + site ~ game, sum)
+```
++ Merge data
+
+Two datasets:
+```{r}
+Lin.game <- ballgames[ballgames[,"Lin"] > 20,
+c("game", "site", "Lin")]
+Jordan.game <- ballgames[ballgames[,"Jordan"] > 20,
+c("game", "site", "Jordan")]
+Lin.game
+Jordan.game
+```
+Using **merge(. . . )** to combine datasets to a new dataset by
+
+1. intersection
+2. union: set **all = TURE** in merge(. . . )
+```{R}
+merge(Lin.game, Jordan.game)
+merge(Lin.game, Jordan.game, all = TRUE)
+```
+
+Merge data by the information of the specific dataset.
+
++ merge(x, y, all.x = TRUE)
++ merge(x, y, all.y = TRUE)
+```{r}
+merge(Lin.game, Jordan.game, all.x = TRUE)
+merge(Lin.game, Jordan.game, all.y = TRUE)
+```
+
+### Regression
++ linear model: lm(. . . )
+  - Regression is used to show the relationship between independent variables and dependent variables.
+  - Before data analysis, we should check the relation plot.
+```{r}
+data1 <- airquality[1:120, ]
+data2 <- airquality[121:153, ]
+lm1 <- lm(Ozone ~ Temp, data = data1)
+lm2 <- lm(Ozone ~ Temp - 1, data = data1)
+summary(lm1)
+summary(lm2)
+```
++ Prediction by the fitted linear model
+```{r}
+y.predict <- predict(lm1, data2)
+y.predict
+```
++ Performance of fitted model
+```{r}
+plot(airquality[, 4], airquality[, 1], pch = 19)
+abline(lm1)
+points(airquality[121:153, 4], y.predict, col = 2, pch = 19)
+```
+
++ Performance of prediction
+```{r}
+plot(airquality[121:153, 1], y.predict, pch = 19)
+abline(0, 1)
+```
+
+### Package: dplyr
++ %>% in package: dplyr
+
+**%>%** means that apply functions to an object.
+```{r eval=FALSE}
+library(magrittr)
+y <- sample(1:100, 10)
+mean(y)
+y %>% mean()
+min(y)
+y %>% min()
+```
++ Multiple functions
+```{r eval=FALSE}
+sample(1:100, 5) %>% mean()
+sample(1:100, 10) %>% min()
+```
++ Write a code to report the last name of each member.
+```{r eval=FALSE}
+nba_stars <- c("Stephen Curry", "LeBron James")
+names <- strsplit(nba_stars, split = " ")
+toupper(names[[1]][2])
+nba_stars %>%
+  strsplit(, split = " ") %>%
+  `[[` (1) %>%
+  `[` (2) %>%
+  toupper()
+```
